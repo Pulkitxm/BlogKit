@@ -1,10 +1,16 @@
 import React from 'react'
 
+import './app.css'
+
+import Navbar from './components/Navbar.jsx'
+import Editor from './components/Editor.jsx'
+
 const app = () =>{
   return (
-    <React.Fragment>
-        Hello
-    </React.Fragment>
+    <div className='app'>
+        {/* <Navbar/> */}
+        <Editor/>
+    </div>
   )
 }
 
