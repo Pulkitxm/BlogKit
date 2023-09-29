@@ -1,0 +1,13 @@
+.home{
+    overflow-y: auto;
+}
+
+.blog{
+    height: 15em;
+    overflow: hidden;
+    width: 50%;
+    margin: 2em auto;
+    box-shadow: 5px 5px 40px #00000054;
+    padding: 1em;
+    border-radius: 1em;
+}

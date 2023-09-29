@@ -4,6 +4,11 @@ body{
     height: 100vh;
 }
 
+a{
+    text-decoration: none;
+    color: #000;
+}
+
 button{
     user-select: none;
     cursor: pointer;
@@ -15,4 +20,10 @@ button{
     grid-template-rows: repeat(20,1fr);
     grid-template-columns: repeat(1,1fr);
     overflow: hidden;
+}
+
+.preview,
+.editContainer,
+.home{
+    grid-row: 2/21;
 }

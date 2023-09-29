@@ -2,9 +2,48 @@ import React, { useEffect, useState } from "react";
 
 import "./Editor.css";
 
-const Editor = () => {
-  const [preview, setPreview] = useState(false);
-  const [text, setText] = useState('');
+import Preview from './Prview'
+
+const Editor = ({title,author,likes}) => {
+  const [preview, setPreview] = useState(true);
+  const [text, setText] = useState(`Pulkit
+  **Title:** My Amazing Blog
+  
+  **Author:** John Doe
+  
+  **Date:** September 27, 2023
+  
+  **Introduction:**
+ 
+  (img){https://images.unsplash.com/photo-1683009680116-b5c04463551d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80}
+
+  Welcome to my amazing blog where I share my thoughts and experiences with the world. In this blog post, I'll cover a variety of topics, including technology, travel, and more.
+  
+  **Heading 1: Technology Trends**
+  
+  In recent years, technology has advanced at an incredible pace. From the rise of artificial intelligence to the development of self-driving cars, we're living in an exciting time. 
+  
+  **Heading 2: Travel Adventures**
+  
+  I've had the privilege of traveling to many beautiful places around the world. One of my favorite destinations is the stunning beaches of Bali. The crystal-clear waters and vibrant culture make it a must-visit location for any traveler.
+  
+  **Bold and Italics:**
+  
+  - *Emphasizing important points in your blog is essential.*
+  - **Using bold text can grab the reader's attention.**
+  
+  **Inserting Images:**
+  
+  **Creating Links:**
+  
+  Visit the official Bali tourism website [here](https://www.bali.com/) to learn more about this beautiful island.
+  
+  **Conclusion:**
+  
+  I hope you enjoyed reading my blog post. Stay tuned for more exciting content in the future!
+  
+  Remember to use your text editor's features to format and style the content as needed. Enjoy writing your blog!
+  `);
 
   useEffect(() => {
     convertIntoMarkup();
@@ -64,7 +103,7 @@ const Editor = () => {
     const result = document.querySelector(".result");
     result.innerHTML = markupText;
   };
-
+  
   const insertText = (textToInsert) => {
     const editorTextarea = document.getElementById("editor");
     const currentText = editorTextarea.value;
@@ -81,6 +120,13 @@ const Editor = () => {
     );
     convertIntoMarkup({ target: { value: newText } }); // Update the .result
   };
+
+  const obj = {
+    title,
+    author,
+    content:text,
+    likes
+  }
 
   return (
     <div
@@ -129,25 +175,7 @@ const Editor = () => {
           onChange={(e) => convertIntoMarkup(e)}
         ></textarea>
       </div>
-      <div className="preview" style={{ display: preview ? "block" : "none" }}>
-        
-      <div className="topNav">
-          <p>Preview</p>
-          {
-            !preview?
-                <button style={{opacity:.5}} >
-                    <span className="material-symbols-outlined">close</span>
-                </button>
-            :
-                <button onClick={() => setPreview(!preview)}>
-                    <span className="material-symbols-outlined">close</span>
-                </button>
-
-          }
-        </div>
-        
-        <div className="result"></div>
-      </div>
+      <Preview preview={preview} setPreview={setPreview} setText={setText} />
     </div>
   );
 };

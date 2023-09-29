@@ -8,3 +8,4 @@
 
 // const blogSchema = new mongoose.Schema({
 //   title: String,
+console.log("mongo");

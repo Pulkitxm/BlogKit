@@ -2,8 +2,12 @@ const express = require("express")
 const app = express()
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cors = require('cors');
+
 
 app.use(bodyParser.json());
+app.use(cors());
+
 main()
     .then(()=>{
         console.log("connected to mongo");
@@ -34,7 +38,7 @@ const testBlog = new Blog({
 app.get("/blogs", async (req, res) => {
     await Blog.find({})
     .then((blogs)=>{
-        res.send(blogs)
+        res.status(202).send(blogs)
     })
 })
 
@@ -47,14 +51,14 @@ app.post("/blogs", async (req, res) => {
     })
     await newBlog.save()
     .then((blog)=>{
-        res.send(`new Blog is added with id ${newBlog._id}`)
+        res.status(202).send(`new Blog is added with id ${newBlog._id}`)
     })
 })
 
 app.get("/blog/:id", async (req, res) => {
     await Blog.findById(req.params.id)
     .then((blog)=>{
-        res.send(blog)
+        res.status(202).send(blog)
     })
 })
 
@@ -62,7 +66,7 @@ app.put("/blog/:id", async (req, res) => {
     //get body for blog
     await Blog.findByIdAndUpdate(req.params.id, {content: req.body.content} , { new: true })
     .then(()=>{
-        res.send(`Blog with id ${req.params.id} is updated`)
+        res.status(202).send(`Blog with id ${req.params.id} is updated`)
     })
 })
 
@@ -70,21 +74,21 @@ app.delete("/blog/:id", async (req, res) => {
     //get body for blog
     await Blog.findByIdAndDelete(req.params.id)
     .then(()=>{
-        res.send(`Blog with id ${req.params.id} is deleted`)
+        res.status(202).send(`Blog with id ${req.params.id} is deleted`)
     })
 })
 
 app.get("/:author/blogs", async (req, res) => {
     await Blog.find({author: req.params.author})
     .then((blogs)=>{
-        res.send(blogs)
+        res.status(202).send(blogs)
     })
 })
 
 app.delete("/:author/blogs", async (req, res) => {
     await Blog.deleteMany({author: req.params.author})
     .then((blogs)=>{
-        res.send(`Blogs with author ${req.params.id} are deleted`)
+        res.status(202).send(`Blogs with author ${req.params.id} are deleted`)
     })
 })
 
