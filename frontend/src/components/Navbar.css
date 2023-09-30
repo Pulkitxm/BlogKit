@@ -4,6 +4,8 @@
     display: flex;
     justify-content: space-around;
     padding: 0 1em;
+    width: 50%;
+    margin: auto;
 }
 
 .nav ul{

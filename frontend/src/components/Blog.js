@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useParams,Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 
-import './Blog.css'
+import './Blog.css';
+import { set } from 'mongoose';
 
 const Blog = () => {
+  const [likes, setLikes] = useState(0)
   const { id } = useParams();
   const baseUrl = 'http://localhost:3001';
+  const [redirectAfterDelete, setRedirectAfterDelete] = useState('')
 
   const [blog, setBlog] = useState(null);
 
@@ -15,6 +18,7 @@ const Blog = () => {
       try {
         const response = await axios.get(`${baseUrl}/blog/${id}`);
         setBlog(response.data);
+        setLikes(response.data.likes)
       } catch (error) {
         console.error('Error fetching blog:', error);
       }
@@ -55,17 +59,47 @@ const Blog = () => {
   };
 
   return (
-    <div className='singleBlog' >
-      <div className="preview" style={blogStyles}  >
-      <div className="topNav">
-          <button style={{ opacity: .5 }} >
-              <Link to={`/editor/${id}`}>
-                <span className="material-symbols-outlined">edit</span>
-              </Link>
+    <div className='singleBlog'>
+      <div className="preview" style={blogStyles}>
+        <div className="topNav">
+          <p>
+            {likes}
+          </p>
+          <button>
+              <span className="material-symbols-outlined" onClick={(e)=>{
+                setLikes(likes+1)
+                axios.patch(`${baseUrl}/blog/${id}`)
+                .then(()=>setBlog({...blog, likes: blog.likes+1}))
+                .catch((error) => {
+                  console.error("Error updating blog:", error);
+                });
+              }} >thumb_up</span>
           </button>
+          <button style={{ opacity: 0.5 , paddingLeft: "1.5em"}}>
+            <Link to={`/editor/${id}`}>
+              <span className="material-symbols-outlined">edit</span>
+            </Link>
+          </button>
+          <Link to={redirectAfterDelete} >
+            <button
+              style={{ opacity: 0.5, paddingLeft: "1.5em" }}
+              onClick={(e) => {
+                if (window.confirm("Are you sure you wish to delete this blog?")) {
+                  axios.delete(`${baseUrl}/blog/${id}`)
+                  .then(()=>setRedirectAfterDelete('/'))
+                    .catch((error) => {
+                      console.error("Error deleting blog:", error);
+                    });
+                }
+              }}
+            >
+              <span className="material-symbols-outlined">delete</span>
+            </button>
+          </Link>
         </div>
-        <div className='content' dangerouslySetInnerHTML={{ __html: convertIntoMarkup(blog.content) }} /></div>
+        <div className='content' dangerouslySetInnerHTML={{ __html: convertIntoMarkup(blog.content) }} />
       </div>
+    </div>
   );
 };
 

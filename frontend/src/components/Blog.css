@@ -10,12 +10,23 @@
 .preview .topNav{
     display: flex;
     justify-content: flex-end;
+    align-items: center;
+    /* margin: 0 0 1em 0; */
 }
 
 .preview .topNav button{
     background: transparent;
     border: none;
     color: orange;
+    padding: 0 1em;
+}
+
+.preview .topNav p{
+    background: transparent;
+    border: none;
+    color: orange;
+    padding: 0 1em;
+    font-size: 1.5em;
 }
 
 .preview .topNav span {

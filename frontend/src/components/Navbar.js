@@ -11,25 +11,9 @@ function Navbar({user}) {
           <Link to='' ><p>Home</p></Link>
         </li>
         <li>
-          <Link to='/editor' ><p>Editor</p></Link>
-        </li>
-        <li>
-          <Link to='' ><p>Contact</p></Link>
-        </li>
-        <li>
-          <Link to='' ><p>Links</p></Link>
+          <Link to='/editor' ><p>Write a new Blog</p></Link>
         </li>
       </ul>
-      {
-        user==null?
-          <Link to="/login" className='login' >
-            Login/SignUp
-          </Link>
-          :
-          <Link to="/dashoard" className='login' >
-            Hi {user.name}
-          </Link>
-      }
     </div>
   )
 }

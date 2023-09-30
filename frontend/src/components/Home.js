@@ -102,6 +102,18 @@ const Home = () => {
           return(
               <div key={blog._id} className='blog' style={{fontSize:"1.3em"}} >
                 <Link to={`/blog/${blog._id}`} key={blog._id} >
+                  <div style={{marginBottom:"1em"}} >
+                    Title : <b>{blog.title}</b>
+                    <br/>
+                    Author : <b>{blog.author}</b>
+                    <br/>
+                    <div style={{display:"flex",alignItems:"center",height:"1.5em",fontSize:"1.2em"}}>
+                      {blog.likes}
+                      <span className="material-symbols-outlined">
+                        thumb_up
+                      </span>
+                    </div>
+                  </div>
                   <div dangerouslySetInnerHTML={{ __html: convertIntoMarkup(blog.content) }} className='blogContent' >
                   </div>
                 </Link>

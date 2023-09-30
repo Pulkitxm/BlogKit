@@ -1,20 +1,19 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
 import "./Editor.css";
 
-import Preview from './Preview'
+import Preview from "./Preview";
 
 const Editor = ({ title, author, likes }) => {
   const [preview, setPreview] = useState(false);
-  const [text, setText] = useState(``);
-  const [changes, setChanges] = useState(false)
+  const [text, setText] = useState("");
+  const [changes, setChanges] = useState(false);
   const { id } = useParams();
   const editorTextareaRef = useRef(null);
+  const baseUrl = "http://localhost:3001";
 
-  const baseUrl = 'http://localhost:3001';
-  
   const getBlogById = async (id) => {
     try {
       const response = await axios.get(`${baseUrl}/blog/${id}`);
@@ -39,10 +38,10 @@ const Editor = ({ title, author, likes }) => {
     fetchData();
   }, [id]);
 
-  const convertIntoMarkup = (e,isNew,text='') => {
-    if (text){
+  const convertIntoMarkup = (e, isNew, text = "") => {
+    if (text) {
       editorTextareaRef.current.value = text;
-      setPreview(true)
+      setPreview(true);
     }
     const txt = editorTextareaRef.current.value;
     setText(txt);
@@ -140,48 +139,81 @@ const Editor = ({ title, author, likes }) => {
           <button onClick={() => insertText("(Text){--URL--}")}>
             <span className="material-symbols-outlined">link</span>
           </button>
-          {
-            preview ?
-              <>
-                <button style={{ opacity: .5 }} >
-                  <span className="material-symbols-outlined">play_arrow</span>
-                </button>
-              </>
-              :
-              <>
-                <button onClick={() => setPreview(!preview)}>
-                  <span className="material-symbols-outlined btn-topNav">play_arrow</span>
-                </button>
-              </>
-
-          }
+          {preview ? (
+            <>
+              <button style={{ opacity: 0.5 }}>
+                <span className="material-symbols-outlined">play_arrow</span>
+              </button>
+            </>
+          ) : (
+            <>
+              <button onClick={() => setPreview(!preview)}>
+                <span className="material-symbols-outlined btn-topNav">
+                  play_arrow
+                </span>
+              </button>
+            </>
+          )}
         </div>
         <textarea
           id="editor"
           ref={editorTextareaRef}
           value={text}
           onChange={(e) => {
-            convertIntoMarkup(e)
-            setChanges(true)
+            convertIntoMarkup(e);
+            setChanges(true);
           }}
         ></textarea>
       </div>
       <Preview preview={preview} setPreview={setPreview} setText={setText} />
       <div
-        className="save" 
-        style={{opacity:changes?"1":".6",animation:!changes?"":"shake .5s 3"}}
-        onClick={() => {
-          if (changes && text!=="") {
-            axios.put(`${baseUrl}/blog/${id}`, {content:(text)})
-              .catch((err) => {
-                console.log(err);
-              });
-            setChanges(false)
-          }
+        className="save"
+        style={{
+          opacity: changes ? "1" : ".6",
+          animation: !changes ? "" : "shake .5s 3",
         }}
       >
         <button>
-          <span className="material-symbols-outlined">save</span>
+          <span
+            className="material-symbols-outlined"
+            onClick={(e) => {
+              if (changes && text !== "") {
+                if (id) {
+                  axios
+                    .put(`${baseUrl}/blog/${id}`, { content: text })
+                    .then(() => {
+                      setChanges(false);
+                      setTimeout(() => (e.target.innerHTML = "done"), 1000);
+                      setTimeout(() => (e.target.innerHTML = "save"), 3000);
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                } else {
+                  let author, title;
+                  author = prompt("Enter your name");
+                  title = prompt("Enter the title of your blog");
+                  axios
+                    .post(`${baseUrl}/blogs`, {
+                      author: author||"",
+                      content: text,
+                      title: title||"Untitled",
+                      likes: 0,
+                    })
+                    .then(() => {
+                      setChanges(false);
+                      setTimeout(() => (e.target.innerHTML = "done"), 1000);
+                      setTimeout(() => (e.target.innerHTML = "save"), 3000);
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                }
+              }
+            }}
+          >
+            save
+          </span>
         </button>
       </div>
     </div>

@@ -14,11 +14,16 @@ const Prview =({preview,setPreview,setText}) => {
                 </button>
             :
                 <div className='right-Btn' style={{display:"flex",transform:"scale(.7)",justifyContent:"space-evenly"}}>
-                  <Link to={`/blog/${id}`} >
-                    <button>
-                      <span className="material-symbols-outlined">visibility</span>
-                    </button>
-                  </Link>
+                  {
+                    id?
+                    <Link to={`/blog/${id}`} >
+                      <button>
+                        <span className="material-symbols-outlined">visibility</span>
+                      </button>
+                    </Link>
+                    :
+                    <></>
+                  }
                   <button onClick={() => setPreview(!preview)}>
                       <span className="material-symbols-outlined">close</span>
                   </button>
@@ -27,7 +32,7 @@ const Prview =({preview,setPreview,setText}) => {
           }
         </div>
         
-        <div className="result"></div>
+        <div className="result" style={{height:"90%",overflowY:"scroll"}}></div>
       </div>
   )
 }
