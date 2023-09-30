@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams,Link } from 'react-router-dom';
 import axios from 'axios';
+
+import './Blog.css'
 
 const Blog = () => {
   const { id } = useParams();
@@ -53,9 +55,17 @@ const Blog = () => {
   };
 
   return (
-    <div >
-      <div className="preview" style={blogStyles} dangerouslySetInnerHTML={{ __html: convertIntoMarkup(blog.content) }} />
-    </div>
+    <div className='singleBlog' >
+      <div className="preview" style={blogStyles}  >
+      <div className="topNav">
+          <button style={{ opacity: .5 }} >
+              <Link to={`/editor/${id}`}>
+                <span className="material-symbols-outlined">edit</span>
+              </Link>
+          </button>
+        </div>
+        <div className='content' dangerouslySetInnerHTML={{ __html: convertIntoMarkup(blog.content) }} /></div>
+      </div>
   );
 };
 

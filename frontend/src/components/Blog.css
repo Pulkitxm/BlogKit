@@ -1,0 +1,43 @@
+.singleBlog{
+    padding: 2em 0;
+    overflow-y: scroll;
+}
+
+.preview .topNav{
+    color: red;
+}
+
+.preview .topNav{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.preview .topNav button{
+    background: transparent;
+    border: none;
+    color: orange;
+}
+
+.preview .topNav span {
+    transform: scale(1.5);
+    background: transparent;
+    border: none;
+    color: orange;
+}
+
+.preview .topNav button span:hover{
+    opacity: 1;
+    animation: style .5s linear;
+}
+
+@keyframes style{
+    0%{
+        transform:scale(1.5);
+    }
+    50%{
+        transform:scale(2);
+    }
+    100%{
+        transform:scale(1.5);
+    }
+}

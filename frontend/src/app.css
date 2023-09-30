@@ -7,6 +7,8 @@ body{
 a{
     text-decoration: none;
     color: #000;
+    user-select: none;
+    cursor: pointer;
 }
 
 button{
@@ -22,6 +24,7 @@ button{
     overflow: hidden;
 }
 
+.singleBlog,
 .preview,
 .editContainer,
 .home{

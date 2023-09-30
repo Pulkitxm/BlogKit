@@ -1,59 +1,50 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 import "./Editor.css";
 
-import Preview from './Prview'
+import Preview from './Preview'
 
-const Editor = ({title,author,likes}) => {
-  const [preview, setPreview] = useState(true);
-  const [text, setText] = useState(`Pulkit
-  **Title:** My Amazing Blog
-  
-  **Author:** John Doe
-  
-  **Date:** September 27, 2023
-  
-  **Introduction:**
- 
-  (img){https://images.unsplash.com/photo-1683009680116-b5c04463551d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80}
+const Editor = ({ title, author, likes }) => {
+  const [preview, setPreview] = useState(false);
+  const [text, setText] = useState(``);
+  const [changes, setChanges] = useState(false)
+  const { id } = useParams();
+  const editorTextareaRef = useRef(null);
 
-  Welcome to my amazing blog where I share my thoughts and experiences with the world. In this blog post, I'll cover a variety of topics, including technology, travel, and more.
+  const baseUrl = 'http://localhost:3001';
   
-  **Heading 1: Technology Trends**
-  
-  In recent years, technology has advanced at an incredible pace. From the rise of artificial intelligence to the development of self-driving cars, we're living in an exciting time. 
-  
-  **Heading 2: Travel Adventures**
-  
-  I've had the privilege of traveling to many beautiful places around the world. One of my favorite destinations is the stunning beaches of Bali. The crystal-clear waters and vibrant culture make it a must-visit location for any traveler.
-  
-  **Bold and Italics:**
-  
-  - *Emphasizing important points in your blog is essential.*
-  - **Using bold text can grab the reader's attention.**
-  
-  **Inserting Images:**
-  
-  **Creating Links:**
-  
-  Visit the official Bali tourism website [here](https://www.bali.com/) to learn more about this beautiful island.
-  
-  **Conclusion:**
-  
-  I hope you enjoyed reading my blog post. Stay tuned for more exciting content in the future!
-  
-  Remember to use your text editor's features to format and style the content as needed. Enjoy writing your blog!
-  `);
+  const getBlogById = async (id) => {
+    try {
+      const response = await axios.get(`${baseUrl}/blog/${id}`);
+      return response.data.content;
+    } catch (error) {
+      return null;
+    }
+  };
 
   useEffect(() => {
-    convertIntoMarkup();
-  }, [])
+    const fetchData = async () => {
+      if (id) {
+        const content = await getBlogById(id);
+        if (content !== null) {
+          convertIntoMarkup(null, true, content);
+        }
+      } else {
+        convertIntoMarkup(null, true);
+      }
+    };
 
-  const convertIntoMarkup = (e) => {
-    const txt = (e)?
-    e.target.value
-    :
-    document.querySelector("#editor").value;
+    fetchData();
+  }, [id]);
+
+  const convertIntoMarkup = (e,isNew,text='') => {
+    if (text){
+      editorTextareaRef.current.value = text;
+      setPreview(true)
+    }
+    const txt = editorTextareaRef.current.value;
     setText(txt);
 
     let markupText = txt;
@@ -84,8 +75,7 @@ const Editor = ({title,author,likes}) => {
     // Add a Horizontal Rule (hr) for ---
     markupText = markupText.replace(/---/g, "<hr>");
 
-    // Replace <URL> with <img> tag
-    // markupText = markupText.replace(/<([^>]+)>/g, '<a href="$1" target="_blank"><img src="$1" width="300px" height="300px" alt="Insert a Correct url" /></a>');
+    // Replace (img){URL} with <img> tag
     markupText = markupText.replace(
       /\(img\){([^}]+)}/g,
       '<img src="$1" width="300px" height="300px" alt="Enter a valid link" />'
@@ -102,31 +92,24 @@ const Editor = ({title,author,likes}) => {
 
     const result = document.querySelector(".result");
     result.innerHTML = markupText;
+    // return markupText;
   };
-  
+
   const insertText = (textToInsert) => {
-    const editorTextarea = document.getElementById("editor");
-    const currentText = editorTextarea.value;
-    const selectionStart = editorTextarea.selectionStart;
-    const selectionEnd = editorTextarea.selectionEnd;
+    const currentText = editorTextareaRef.current.value;
+    const selectionStart = editorTextareaRef.current.selectionStart;
+    const selectionEnd = editorTextareaRef.current.selectionEnd;
     const newText =
       currentText.substring(0, selectionStart) +
       textToInsert +
       currentText.substring(selectionEnd);
-    editorTextarea.value = newText;
-    editorTextarea.setSelectionRange(
+    editorTextareaRef.current.value = newText;
+    editorTextareaRef.current.setSelectionRange(
       selectionStart + textToInsert.length,
       selectionStart + textToInsert.length
     );
-    convertIntoMarkup({ target: { value: newText } }); // Update the .result
+    convertIntoMarkup(null, true, newText); // Update the .result
   };
-
-  const obj = {
-    title,
-    author,
-    content:text,
-    likes
-  }
 
   return (
     <div
@@ -158,24 +141,49 @@ const Editor = ({title,author,likes}) => {
             <span className="material-symbols-outlined">link</span>
           </button>
           {
-            preview?
-                <button style={{opacity:.5}} >
-                    <span className="material-symbols-outlined">play_arrow</span>
+            preview ?
+              <>
+                <button style={{ opacity: .5 }} >
+                  <span className="material-symbols-outlined">play_arrow</span>
                 </button>
-            :
+              </>
+              :
+              <>
                 <button onClick={() => setPreview(!preview)}>
-                    <span className="material-symbols-outlined">play_arrow</span>
+                  <span className="material-symbols-outlined btn-topNav">play_arrow</span>
                 </button>
+              </>
 
           }
         </div>
         <textarea
           id="editor"
+          ref={editorTextareaRef}
           value={text}
-          onChange={(e) => convertIntoMarkup(e)}
+          onChange={(e) => {
+            convertIntoMarkup(e)
+            setChanges(true)
+          }}
         ></textarea>
       </div>
       <Preview preview={preview} setPreview={setPreview} setText={setText} />
+      <div
+        className="save" 
+        style={{opacity:changes?"1":".6",animation:!changes?"":"shake .5s 3"}}
+        onClick={() => {
+          if (changes && text!=="") {
+            axios.put(`${baseUrl}/blog/${id}`, {content:(text)})
+              .catch((err) => {
+                console.log(err);
+              });
+            setChanges(false)
+          }
+        }}
+      >
+        <button>
+          <span className="material-symbols-outlined">save</span>
+        </button>
+      </div>
     </div>
   );
 };

@@ -145,3 +145,48 @@
     opacity: 1;
     transition: .3s;
 }
+
+.btn-topNav{
+    animation: highligh 1.5s 5;
+}
+
+@keyframes highligh{
+    0%{
+        background-color: #e2e2e2;
+    }
+    100%{
+        background-color: transparent;
+    }
+}
+
+.editContainer .save{
+    position: absolute;
+    bottom: 1em;
+    right: 2em;
+    transition: .2s;
+}
+
+.editContainer .save button{
+    background: transparent;
+    border: none;
+}
+
+.editContainer .save button span{
+    font-size: 5em;
+}
+
+.editContainer .save:active{
+    transform: scale(1.1);
+}
+
+@keyframes shake {
+    0%{
+        transform: rotate(0deg);
+    }
+    50%{
+        transform: rotate(20deg);
+    }
+    100%{
+        transform: rotate(0deg);
+    }
+}
