@@ -17,7 +17,9 @@ main()
     .catch(err => console.log(err));
 
 async function main() {
-  await mongoose.connect('mongodb://127.0.0.1:27017/BlogKit');
+  await mongoose.connect(
+    "mongodb+srv://pulkit:root@cluster0.autemiz.mongodb.net/?retryWrites=true&w=majority"
+  );
 }
 
 const port = 3001
