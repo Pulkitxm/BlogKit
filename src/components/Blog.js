@@ -5,10 +5,9 @@ import axios from 'axios';
 import './Blog.css';
 import { set } from 'mongoose';
 
-const Blog = () => {
+const Blog = ({baseUrl}) => {
   const [likes, setLikes] = useState(0)
   const { id } = useParams();
-  const baseUrl = 'http://localhost:3001';
   const [redirectAfterDelete, setRedirectAfterDelete] = useState('')
 
   const [blog, setBlog] = useState(null);

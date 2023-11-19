@@ -11,7 +11,7 @@ import Navbar from './components/Navbar';
 import Editor from './components/Editor';
 import NotFound from './components/NotFound';
 
-const baseUrl = 'http://localhost:3001';
+const baseUrl = "https://blogkit-backend.vercel.app";
 
 const App = () => {
   // const [user, setUser] = useState({name:"Pulkit"})
@@ -22,11 +22,11 @@ const App = () => {
       <div className='app'>
         <Navbar user={user} />
         <Routes>
-          <Route path="/" element={<Home/>} />
-          <Route path="/editor" element={<Editor />} />
-          <Route path="/editor/:id" element={<Editor />} />
-          <Route path="/blog/:id" element={<Blog />} />
-          <Route path="/*" element={<NotFound />} />
+          <Route path="/" element={<Home baseUrl={baseUrl} />} />
+          <Route path="/editor" element={<Editor  baseUrl={baseUrl} />} />
+          <Route path="/editor/:id" element={<Editor  baseUrl={baseUrl} />} />
+          <Route path="/blog/:id" element={<Blog  baseUrl={baseUrl} />} />
+          <Route path="/*" element={<NotFound  baseUrl={baseUrl} />} />
         </Routes>
       </div>
     </Router>

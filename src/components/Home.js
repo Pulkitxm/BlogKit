@@ -3,8 +3,7 @@ import {Link} from 'react-router-dom';
 import axios from 'axios';
 import './Home.css';
 
-const Home = () => {
-  const baseUrl = 'http://localhost:3001';
+const Home = ({ baseUrl }) => {
   const blogServices = {
     getAll: async () => {
       try {
@@ -13,7 +12,7 @@ const Home = () => {
         throw error;
       }
     },
-    
+
     getBlogsForAuthor: async (author) => {
       try {
         return await axios.get(`${baseUrl}/author/${author}/blogs`);
@@ -21,7 +20,7 @@ const Home = () => {
         throw error;
       }
     },
-    
+
     getBlogById: async (id) => {
       try {
         return await axios.get(`${baseUrl}/${id}`);
@@ -40,7 +39,7 @@ const Home = () => {
         const response = await blogServices.getAll();
         setBlogs(response.data);
       } catch (error) {
-        console.error('Error fetching blogs:', error);
+        console.error("Error fetching blogs:", error);
       }
     };
 
@@ -48,7 +47,6 @@ const Home = () => {
   }, [blogServices]);
 
   const convertIntoMarkup = (txt) => {
-
     let markupText = txt;
 
     // Text Formatting (Bold and Italics)
@@ -76,7 +74,7 @@ const Home = () => {
 
     // Add a Horizontal Rule (hr) for ---
     markupText = markupText.replace(/---/g, "<hr>");
-    markupText = markupText.replace(/\n/g, '<br>');
+    markupText = markupText.replace(/\n/g, "<br>");
 
     // Replace <URL> with <img> tag
     // markupText = markupText.replace(/<([^>]+)>/g, '<a href="$1" target="_blank"><img src="$1" width="300px" height="300px" alt="Insert a Correct url" /></a>');
@@ -94,33 +92,42 @@ const Home = () => {
     // New Line: Replace \n with <br> for line breaks
     return markupText;
   };
-  
+
   return (
-    <div className='home'>
-        <div className="blogs">
+    <div className="home">
+      <div className="blogs">
         {blogs.map((blog) => {
-          return(
-              <div key={blog._id} className='blog' style={{fontSize:"1.3em"}} >
-                <Link to={`/blog/${blog._id}`} key={blog._id} >
-                  <div style={{marginBottom:"1em"}} >
-                    Title : <b>{blog.title}</b>
-                    <br/>
-                    Author : <b>{blog.author}</b>
-                    <br/>
-                    <div style={{display:"flex",alignItems:"center",height:"1.5em",fontSize:"1.2em"}}>
-                      {blog.likes}
-                      <span className="material-symbols-outlined">
-                        thumb_up
-                      </span>
-                    </div>
+          return (
+            <div key={blog._id} className="blog" style={{ fontSize: "1.3em" }}>
+              <Link to={`/blog/${blog._id}`} key={blog._id}>
+                <div style={{ marginBottom: "1em" }}>
+                  Title : <b>{blog.title}</b>
+                  <br />
+                  Author : <b>{blog.author}</b>
+                  <br />
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      height: "1.5em",
+                      fontSize: "1.2em",
+                    }}
+                  >
+                    {blog.likes}
+                    <span className="material-symbols-outlined">thumb_up</span>
                   </div>
-                  <div dangerouslySetInnerHTML={{ __html: convertIntoMarkup(blog.content) }} className='blogContent' >
-                  </div>
-                </Link>
-              </div>
-          )
+                </div>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: convertIntoMarkup(blog.content),
+                  }}
+                  className="blogContent"
+                ></div>
+              </Link>
+            </div>
+          );
         })}
-        </div>
+      </div>
     </div>
   );
 };

@@ -6,13 +6,12 @@ import "./Editor.css";
 
 import Preview from "./Preview";
 
-const Editor = ({ title, author, likes }) => {
+const Editor = ({ title, author, likes, baseUrl }) => {
   const [preview, setPreview] = useState(false);
   const [text, setText] = useState("");
   const [changes, setChanges] = useState(false);
   const { id } = useParams();
   const editorTextareaRef = useRef(null);
-  const baseUrl = "http://localhost:3001";
 
   const getBlogById = async (id) => {
     try {
@@ -195,9 +194,9 @@ const Editor = ({ title, author, likes }) => {
                   title = prompt("Enter the title of your blog");
                   axios
                     .post(`${baseUrl}/blogs`, {
-                      author: author||"",
+                      author: author || "",
                       content: text,
-                      title: title||"Untitled",
+                      title: title || "Untitled",
                       likes: 0,
                     })
                     .then(() => {
